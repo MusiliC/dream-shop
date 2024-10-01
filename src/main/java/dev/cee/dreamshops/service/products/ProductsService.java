@@ -10,7 +10,7 @@ import dev.cee.dreamshops.dtos.ProductUpdateRequestDto;
 import dev.cee.dreamshops.exceptions.ProductNotFoundException;
 import dev.cee.dreamshops.model.Category;
 import dev.cee.dreamshops.model.Product;
-import dev.cee.dreamshops.repository.ProductRepository;
+import dev.cee.dreamshops.repository.product.ProductRepository;
 import dev.cee.dreamshops.repository.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 

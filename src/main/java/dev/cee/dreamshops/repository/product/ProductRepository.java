@@ -1,4 +1,4 @@
-package dev.cee.dreamshops.repository;
+package dev.cee.dreamshops.repository.product;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
