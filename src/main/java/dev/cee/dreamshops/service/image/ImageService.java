@@ -79,7 +79,7 @@ public class ImageService implements ImageServiceI {
     }
 
     @Override
-    public void updateImage(MultipartFile file, Long imageId, Long prodId) {
+    public void updateImage(MultipartFile file, Long imageId) {
         Image image = this.getImageById(imageId);
 
         try {

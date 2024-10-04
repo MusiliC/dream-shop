@@ -54,9 +54,9 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void deleteCategory(Category category) {
+    public void deleteCategory(Long categoryId) {
         categoryRepository
-                .findById(category.getId())
+                .findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category Not Found"));
     }
 }
