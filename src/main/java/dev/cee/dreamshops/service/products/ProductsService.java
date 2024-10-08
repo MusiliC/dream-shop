@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import dev.cee.dreamshops.dtos.AddProductDto;
 import dev.cee.dreamshops.dtos.ProductUpdateRequestDto;
 import dev.cee.dreamshops.exceptions.ProductNotFoundException;
+import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Category;
 import dev.cee.dreamshops.model.Product;
 import dev.cee.dreamshops.repository.product.ProductRepository;
@@ -50,7 +51,7 @@ public class ProductsService implements IproductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product Not Found"));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class ProductsService implements IproductService {
         return productRepository.findById(productId)
                 .map(existingProd ->  updateExistingProduct(existingProd, productUpdateRequestDto))
                 .map(productRepository :: save)
-                .orElseThrow( () -> new ProductNotFoundException("Product Not Found"));
+                .orElseThrow( () -> new ResourceNotFoundException("Product Not Found"));
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequestDto productUpdateRequestDto) {
@@ -80,7 +81,7 @@ public class ProductsService implements IproductService {
         productRepository
                 .findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                        () -> new ProductNotFoundException("Product Not Found"));
+                        () -> new ResourceNotFoundException("Product Not Found"));
     }
 
     @Override
