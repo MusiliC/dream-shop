@@ -26,20 +26,28 @@ public class ProductsService implements IproductService {
     private final CategoryRepository categoryRepository;
 
 
-    @Override
     public Product addProduct(AddProductDto request) {
+        // Log to check the category name before processing
+        System.out.println("Category Name: " + request.getCategory().getName());
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
                     return categoryRepository.save(newCategory);
                 });
 
+        // Ensure the correct category is set in the request DTO
         request.setCategory(category);
+
+        // Save and return the product
         return productRepository.save(createProduct(request, category));
     }
 
+
     private Product createProduct(AddProductDto request, Category category) {
-        return new Product(
+        System.out.println("Debugging product creation!!!!");
+        System.out.println(category.getName());
+        Product newProduct =  new Product(
                 request.getName(),
                 request.getBrand(),
                 request.getPrice(),
@@ -47,6 +55,9 @@ public class ProductsService implements IproductService {
                 request.getDescription(),
                 category
         );
+
+
+        return newProduct;
     }
 
     @Override
