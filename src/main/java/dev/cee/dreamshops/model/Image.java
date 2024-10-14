@@ -1,6 +1,7 @@
 package dev.cee.dreamshops.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Blob;
 
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ public class Image {
     private String fileType;
 
     @Lob
+    @JsonIgnore
     private Blob image;
 
     private String downloadUrl;

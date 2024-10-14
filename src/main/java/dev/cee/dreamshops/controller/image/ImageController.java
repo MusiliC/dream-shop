@@ -46,7 +46,7 @@ public class ImageController {
 
     }
 
-    @GetMapping("/{imageId}")
+    @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) {
         Image image = imageService.getImageById(imageId);
         try {
