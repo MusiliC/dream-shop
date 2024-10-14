@@ -1,5 +1,6 @@
 package dev.cee.dreamshops.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.sql.Blob;
 
 import jakarta.persistence.Entity;
@@ -34,6 +35,7 @@ public class Image {
 
     private String downloadUrl;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name= "product_id")
     private  Product product;

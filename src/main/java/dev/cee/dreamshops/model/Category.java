@@ -1,5 +1,6 @@
 package dev.cee.dreamshops.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class Category {
 
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
