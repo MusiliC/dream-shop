@@ -108,12 +108,16 @@ public class CartItemService implements CartItemServiceI {
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .ifPresent(item -> {
-                    item.setQuantity(quantity);
+                    int newQuantity = item.getQuantity() + quantity;
+                    item.setQuantity(newQuantity > 0 ? newQuantity : 0);
                     item.setUnitPrice(item.getProduct().getPrice());
                     item.setTotalPrice();
                 });
 
-        BigDecimal totalAmount = cart.getTotalAmount();
+        BigDecimal totalAmount = cart.getItems()
+                .stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         cart.setTotalAmount(totalAmount);
 
