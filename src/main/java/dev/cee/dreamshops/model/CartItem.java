@@ -1,6 +1,8 @@
 package dev.cee.dreamshops.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 
 import jakarta.persistence.CascadeType;
@@ -33,11 +35,13 @@ public class CartItem {
     private BigDecimal totalPrice;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     public  void setTotalPrice() {
