@@ -1,12 +1,12 @@
 package dev.cee.dreamshops.service.cart;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
-import dev.cee.dreamshops.model.CartItem;
 import dev.cee.dreamshops.repository.cart.CartItemRepository;
 import dev.cee.dreamshops.repository.cart.CartRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,8 @@ public class CartService implements CartServiceI {
     private final CartRepository cartRepository;
 
     private final CartItemRepository cartItemRepository;
+
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     @Override
     public Cart getCart(Long id) {
@@ -43,5 +45,13 @@ public class CartService implements CartServiceI {
     public BigDecimal getTotalPrice(Long id) {
         Cart cart = this.getCart(id);
         return cart.getTotalAmount();
+    }
+
+    @Override
+    public Long initNewCart(){
+        Cart newCart = new Cart();
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        newCart.setId(newCartId);
+        return cartRepository.save(newCart).getId();
     }
 }

@@ -12,4 +12,6 @@ public interface CartServiceI {
     void clearCart(Long id);
 
     BigDecimal getTotalPrice(Long id);
+
+    Long initNewCart();
 }
