@@ -9,6 +9,7 @@ import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
 import dev.cee.dreamshops.repository.cart.CartItemRepository;
 import dev.cee.dreamshops.repository.cart.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,6 +34,7 @@ public class CartService implements CartServiceI {
         return cartRepository.save(cart);
     }
 
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = this.getCart(id);
