@@ -3,10 +3,13 @@ package dev.cee.dreamshops.service.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import dev.cee.dreamshops.dtos.OrderResponseDto;
 import dev.cee.dreamshops.enums.OrderStatus;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
@@ -26,10 +29,12 @@ public class OrderService implements OrderServiceI {
 
     private final ProductRepository productRepository;
 
+    private final ModelMapper modelMapper;
+
     private final CartServiceI cartService;
 
     @Override
-    public Order placeOrder(Long userId, Order order) {
+    public Order placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
         Order newOrder = createOrder(cart);
         List<OrderItem> orderItemList = createOrderItems(newOrder, cart);
@@ -44,16 +49,18 @@ public class OrderService implements OrderServiceI {
     }
 
     @Override
-    public Order getOrderById(Long orderId) {
+    public OrderResponseDto getOrderById(Long orderId) {
 
-        return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        return orderRepository.findById(orderId)
+                .map(this::convertToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
-        order.setOrderDate(LocalDate.now());
+        order.setOrderDate(LocalDateTime.now());
         return order;
     }
 
@@ -80,9 +87,17 @@ public class OrderService implements OrderServiceI {
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderResponseDto> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        return orders.
+                stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
 
+    private OrderResponseDto convertToDto(Order order) {
+        return modelMapper.map(order, OrderResponseDto.class);
+    }
 }
