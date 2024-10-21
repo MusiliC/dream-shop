@@ -1,6 +1,7 @@
 package dev.cee.dreamshops.service.user;
 
 import dev.cee.dreamshops.dtos.CreateUserRequest;
+import dev.cee.dreamshops.dtos.UserDto;
 import dev.cee.dreamshops.dtos.UserUpdateRequest;
 import dev.cee.dreamshops.model.User;
 
@@ -14,4 +15,5 @@ public interface UserServiceI {
 
     void deleteUser(Long userId);
 
+    UserDto convertUserToUserDto(User user);
 }

@@ -16,6 +16,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import dev.cee.dreamshops.controller.response.ApiResponse;
 import dev.cee.dreamshops.dtos.CreateUserRequest;
+import dev.cee.dreamshops.dtos.UserDto;
 import dev.cee.dreamshops.dtos.UserUpdateRequest;
 import dev.cee.dreamshops.exceptions.AlreadyExistException;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
@@ -34,7 +35,9 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId) {
         try {
             User user = userService.getUserById(userId);
-            return ResponseEntity.ok(new ApiResponse("Success", user));
+
+            UserDto userDto = userService.convertUserToUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -44,7 +47,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
         try {
             User user = userService.createUser(request);
-            return ResponseEntity.ok(new ApiResponse("Create User Success", user));
+            UserDto userDto = userService.convertUserToUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Create User Success", userDto));
         } catch (AlreadyExistException e) {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
         }
@@ -54,16 +58,17 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UserUpdateRequest request, @PathVariable Long userId) {
         try {
             User user = userService.updateUser(request, userId);
-            return ResponseEntity.ok(new ApiResponse("Update User Success", user));
+            UserDto userDto = userService.convertUserToUserDto(user);
+            return ResponseEntity.ok(new ApiResponse("Update User Success", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ApiResponse> deleteUser( @PathVariable Long userId) {
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         try {
-            userService.deleteUser( userId);
+            userService.deleteUser(userId);
             return ResponseEntity.ok(new ApiResponse("Success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));

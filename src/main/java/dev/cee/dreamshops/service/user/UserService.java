@@ -1,9 +1,11 @@
 package dev.cee.dreamshops.service.user;
 
 import java.util.Optional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import dev.cee.dreamshops.dtos.CreateUserRequest;
+import dev.cee.dreamshops.dtos.UserDto;
 import dev.cee.dreamshops.dtos.UserUpdateRequest;
 import dev.cee.dreamshops.exceptions.AlreadyExistException;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
@@ -16,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserServiceI {
 
     private final UserRepository userRepository;
+
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long id) {
@@ -47,5 +51,10 @@ public class UserService implements UserServiceI {
     @Override
     public void deleteUser(Long userId) {
         userRepository.findById(userId).ifPresentOrElse(userRepository::delete, () -> new ResourceNotFoundException("User not found"));
+    }
+
+    @Override
+    public UserDto convertUserToUserDto(User user) {
+        return modelMapper.map(user, UserDto.class);
     }
 }
