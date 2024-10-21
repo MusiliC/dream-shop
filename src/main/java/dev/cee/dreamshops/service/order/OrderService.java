@@ -3,6 +3,7 @@ package dev.cee.dreamshops.service.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import dev.cee.dreamshops.model.OrderItem;
 import dev.cee.dreamshops.model.Product;
 import dev.cee.dreamshops.repository.order.OrderRepository;
 import dev.cee.dreamshops.repository.product.ProductRepository;
+import dev.cee.dreamshops.service.cart.CartServiceI;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,25 +26,38 @@ public class OrderService implements OrderServiceI {
 
     private final ProductRepository productRepository;
 
+    private final CartServiceI cartService;
+
     @Override
     public Order placeOrder(Long userId, Order order) {
-        throw new UnsupportedOperationException("placeOrder of OrderService class is not implemented");
+        Cart cart = cartService.getCartByUserId(userId);
+        Order newOrder = createOrder(cart);
+        List<OrderItem> orderItemList = createOrderItems(newOrder, cart);
+        newOrder.setOrderItems(new HashSet<>(orderItemList));
+        newOrder.setOrderTotalAmount(calculateTotalAmount(orderItemList));
+        Order savedOrder = orderRepository.save(newOrder);
+
+        cartService.clearCart(cart.getId());
+
+        return savedOrder;
+
     }
 
     @Override
     public Order getOrderById(Long orderId) {
+
         return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
-    private Order createOrder(Cart cart){
+    private Order createOrder(Cart cart) {
         Order order = new Order();
-        //set user
+        order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
         order.setOrderDate(LocalDate.now());
         return order;
     }
 
-    private List<OrderItem> createOrderItems(Order order, Cart cart){
+    private List<OrderItem> createOrderItems(Order order, Cart cart) {
         return cart.getItems()
                 .stream()
                 .map((cartItem -> {
@@ -62,6 +77,11 @@ public class OrderService implements OrderServiceI {
         return orderItems.stream()
                 .map(items -> items.getPrice().multiply(new BigDecimal(items.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public List<Order> getUserOrders(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 
 

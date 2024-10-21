@@ -6,4 +6,6 @@ import dev.cee.dreamshops.model.Cart;
 
 
 public interface CartRepository  extends JpaRepository<Cart, Long> {
+
+    Cart findByUserId(Long userId);
 }
