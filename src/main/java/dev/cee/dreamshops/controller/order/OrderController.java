@@ -14,10 +14,10 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import dev.cee.dreamshops.controller.response.ApiResponse;
 import dev.cee.dreamshops.dtos.OrderResponseDto;
-import dev.cee.dreamshops.dtos.ProductResponseDto;
+
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Order;
-import dev.cee.dreamshops.model.Product;
+
 import dev.cee.dreamshops.service.order.OrderServiceI;
 import lombok.RequiredArgsConstructor;
 
