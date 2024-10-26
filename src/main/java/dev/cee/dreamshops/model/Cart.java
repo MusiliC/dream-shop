@@ -1,5 +1,6 @@
 package dev.cee.dreamshops.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @OneToOne
     @JoinColumn(name = "user_id")
