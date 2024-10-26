@@ -35,7 +35,9 @@ public class OrderController {
 
             Order order = orderService.placeOrder(userId);
 
-            return ResponseEntity.ok(new ApiResponse("Create Order Success", order));
+            OrderResponseDto orderDto = orderService.convertToDto(order);
+
+            return ResponseEntity.ok(new ApiResponse("Create Order Success", orderDto));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error occurred", e.getMessage()));
         }
@@ -61,7 +63,6 @@ public class OrderController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
-
 
 
 }

@@ -46,8 +46,7 @@ public class Order {
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private Set<OrderItem> orderItems = new HashSet<>();
+      private Set<OrderItem> orderItems = new HashSet<>();
 
     @JsonBackReference
     @ManyToOne

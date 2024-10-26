@@ -9,6 +9,8 @@ public class OrderItemDto {
 
     private Long productId;
 
+    private String productBrand;
+
     private String productName;
 
     private Integer quantity;

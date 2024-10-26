@@ -36,7 +36,7 @@ public class CartItemController {
 
         try {
 
-            User user = userService.getUserById(1L);
+            User user = userService.getUserById(3L);
             Cart cart = cartService.initNewCart(user);
 
             cartItemService.addCartItem(cart.getId(), productId, quantity);

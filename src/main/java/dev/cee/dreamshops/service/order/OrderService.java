@@ -2,7 +2,6 @@ package dev.cee.dreamshops.service.order;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -96,8 +95,8 @@ public class OrderService implements OrderServiceI {
                 .toList();
     }
 
-
-    private OrderResponseDto convertToDto(Order order) {
+    @Override
+    public OrderResponseDto convertToDto(Order order) {
         return modelMapper.map(order, OrderResponseDto.class);
     }
 }

@@ -10,6 +10,7 @@ import dev.cee.dreamshops.dtos.AddProductDto;
 import dev.cee.dreamshops.dtos.ImageDto;
 import dev.cee.dreamshops.dtos.ProductResponseDto;
 import dev.cee.dreamshops.dtos.ProductUpdateRequestDto;
+import dev.cee.dreamshops.exceptions.AlreadyExistException;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Category;
 import dev.cee.dreamshops.model.Image;
@@ -35,8 +36,10 @@ public class ProductsService implements IproductService {
 
 
     public Product addProduct(AddProductDto request) {
-        // Log to check the category name before processing
-        System.out.println("Category Name: " + request.getCategory().getName());
+
+        if (productExist(request.getName(), request.getBrand())) {
+            throw new AlreadyExistException("Product " + request.getName() + " " + request.getBrand() + " already exist");
+        }
 
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
@@ -53,9 +56,8 @@ public class ProductsService implements IproductService {
 
 
     private Product createProduct(AddProductDto request, Category category) {
-        System.out.println("Debugging product creation!!!!");
-        System.out.println(category.getName());
-        Product newProduct =  new Product(
+
+        Product newProduct = new Product(
                 request.getName(),
                 request.getBrand(),
                 request.getPrice(),
@@ -68,6 +70,10 @@ public class ProductsService implements IproductService {
         return newProduct;
     }
 
+    private boolean productExist(String name, String brand) {
+        return productRepository.existsByNameAndBrand(name, brand);
+    }
+
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
@@ -76,9 +82,9 @@ public class ProductsService implements IproductService {
     @Override
     public Product updateProduct(ProductUpdateRequestDto productUpdateRequestDto, Long productId) {
         return productRepository.findById(productId)
-                .map(existingProd ->  updateExistingProduct(existingProd, productUpdateRequestDto))
-                .map(productRepository :: save)
-                .orElseThrow( () -> new ResourceNotFoundException("Product Not Found"));
+                .map(existingProd -> updateExistingProduct(existingProd, productUpdateRequestDto))
+                .map(productRepository::save)
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequestDto productUpdateRequestDto) {
@@ -139,16 +145,16 @@ public class ProductsService implements IproductService {
     }
 
     @Override
-    public List<ProductResponseDto> getConvertedProducts(List<Product> products){
-        return  products
+    public List<ProductResponseDto> getConvertedProducts(List<Product> products) {
+        return products
                 .stream()
                 .map(this::convertToDto)
                 .toList();
     }
 
     @Override
-    public ProductResponseDto convertToDto(Product product){
-        ProductResponseDto productResponseDto =  modelMapper.map(product, ProductResponseDto.class);
+    public ProductResponseDto convertToDto(Product product) {
+        ProductResponseDto productResponseDto = modelMapper.map(product, ProductResponseDto.class);
 
         List<Image> images = imageRepository.findByProductId(product.getId());
 

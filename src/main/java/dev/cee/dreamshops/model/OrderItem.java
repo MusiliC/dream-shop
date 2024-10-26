@@ -32,7 +32,6 @@ public class OrderItem {
     private BigDecimal price;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "order_id")
     private Order order;
 

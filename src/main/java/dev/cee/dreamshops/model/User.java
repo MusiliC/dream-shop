@@ -36,6 +36,7 @@ public class User {
 
     private String password;
 
+    @JsonManagedReference
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;

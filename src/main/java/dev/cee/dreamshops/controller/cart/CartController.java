@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import dev.cee.dreamshops.controller.response.ApiResponse;
+import dev.cee.dreamshops.dtos.CartDto;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
 import dev.cee.dreamshops.service.cart.CartServiceI;
@@ -28,7 +29,9 @@ public class CartController {
 
         try {
             Cart cart = cartService.getCart(id);
-            return ResponseEntity.ok(new ApiResponse("Success", cart));
+
+            CartDto cartDto = cartService.convertToDto(cart);
+            return ResponseEntity.ok(new ApiResponse("Success", cartDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }

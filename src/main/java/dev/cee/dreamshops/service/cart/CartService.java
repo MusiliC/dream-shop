@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import dev.cee.dreamshops.dtos.CartDto;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
 import dev.cee.dreamshops.model.User;
@@ -21,6 +23,8 @@ public class CartService implements CartServiceI {
     private final CartRepository cartRepository;
 
     private final CartItemRepository cartItemRepository;
+
+    private final ModelMapper modelMapper;
 
     private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
@@ -64,5 +68,10 @@ public class CartService implements CartServiceI {
     @Override
     public Cart getCartByUserId(Long userId) {
         return cartRepository.findByUserId(userId);
+    }
+
+    @Override
+    public CartDto convertToDto(Cart cart) {
+        return modelMapper.map(cart, CartDto.class);
     }
 }

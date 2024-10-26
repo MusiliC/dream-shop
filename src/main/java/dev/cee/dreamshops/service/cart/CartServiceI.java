@@ -2,6 +2,7 @@ package dev.cee.dreamshops.service.cart;
 
 import java.math.BigDecimal;
 
+import dev.cee.dreamshops.dtos.CartDto;
 import dev.cee.dreamshops.model.Cart;
 import dev.cee.dreamshops.model.User;
 
@@ -17,4 +18,6 @@ public interface CartServiceI {
     Cart initNewCart(User user);
 
     Cart getCartByUserId(Long userId);
+
+    CartDto convertToDto(Cart cart);
 }

@@ -1,5 +1,6 @@
 package dev.cee.dreamshops.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class Cart {
     private Long id;
 
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
