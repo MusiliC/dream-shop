@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import dev.cee.dreamshops.controller.response.ApiResponse;
 import dev.cee.dreamshops.exceptions.ResourceNotFoundException;
 import dev.cee.dreamshops.model.Cart;
@@ -18,6 +19,7 @@ import dev.cee.dreamshops.model.User;
 import dev.cee.dreamshops.service.cart.CartItemServiceI;
 import dev.cee.dreamshops.service.cart.CartServiceI;
 import dev.cee.dreamshops.service.user.UserServiceI;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class CartItemController {
 
         try {
 
-            User user = userService.getUserById(3L);
+            User user = userService.getAunthenticatedUser();
             Cart cart = cartService.initNewCart(user);
 
             cartItemService.addCartItem(cart.getId(), productId, quantity);
@@ -44,6 +46,8 @@ public class CartItemController {
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }catch (JwtException e){
+            return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
